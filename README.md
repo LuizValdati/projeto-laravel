@@ -1,4 +1,4 @@
-# Desafio Técnico - Assistente de Desenvolvimento de Sistemas Pleno
+# Desafio Técnico
 
 Bem-vindo ao desafio técnico da Unimed.
 
@@ -8,7 +8,7 @@ O objetivo deste teste é avaliar conhecimentos fundamentais necessários para o
 
 # Objetivo
 
-Desenvolver uma pequena aplicação capaz de importar um arquivo JSON contendo atendimentos médicos, armazenar os dados em banco de dados e disponibilizar uma interface para cadastro e consulta dessas informações.
+Desenvolver uma pequena aplicação capaz de registrar atendimentos médicos, armazenar os dados em banco de dados e disponibilizar uma interface para cadastro e consulta dessas informações.
 
 O foco não é a complexidade do sistema, mas sim a qualidade da implementação.
 
@@ -37,7 +37,7 @@ Durante a avaliação serão observados conhecimentos em:
 
 ## 1. Banco de Dados
 
-A partir do arquivo `atendimento.json`, modele um banco de dados capaz de armazenar as informações.
+A partir do arquivo `atendimento.json`, modele um banco de dados capaz de armazenar as informações. Este arquivo pode ser usado para realizar o "seeder" do banco.
 
 Fique à vontade para definir:
 
