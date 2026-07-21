@@ -1,253 +1,152 @@
-# Desafio Técnico
+# Sistema de Registro de Atendimentos Médicos
 
-Bem-vindo ao desafio técnico da Unimed.
+Aplicação web para **registrar e consultar atendimentos médicos**, com API REST
+em arquitetura de camadas, banco relacional e interface para cadastro e listagem.
 
-O objetivo deste teste é avaliar conhecimentos fundamentais necessários para o desenvolvimento de aplicações modernas, desde a modelagem de dados até a construção de uma aplicação completa utilizando boas práticas de arquitetura.
+## Tecnologias
 
----
-# Avisos antes de começar
-- Leia com atenção este documento todo e tente seguir ao **máximo** as instruções
-- Crie um fork deste repositório no seu github **sem citar o nome da Unimed**
-- Faça seus commits no seu repositório
-- Quando finalizar envie o link do seu repositório para o e-mail **do recrutador responsável**
-- Você poderá consultar suas ferramentas habituais e até projetos particulares
-- Fique à vontade para questionar o(s) recrutador(es)
-- Fique tranquilo, respire. Boa sorte!
+- **PHP 8.4** / **Laravel 13**
+- **MySQL 8**
+- **Docker** + **Docker Compose** (nginx + php-fpm + mysql)
+- **Frontend:** Blade + JavaScript puro (`fetch`) + CSS
 
-*Corpo do e-mail com o link do repositório do desafio*
+## Arquitetura
 
-- Seu nome
-- Nome do recrutador
-- Link do repositório
----
-
-# Objetivo
-
-Desenvolver uma pequena aplicação capaz de registrar atendimentos médicos, armazenar os dados em banco de dados e disponibilizar uma interface para cadastro e consulta dessas informações.
-
-O foco não é a complexidade do sistema, mas sim a qualidade da implementação.
-
----
-
-# Conhecimentos avaliados
-
-Durante a avaliação serão observados conhecimentos em:
-
-- Docker
-- Banco de Dados (modelagem e SQL)
-- Git
-- Programação Orientada a Objetos (POO)
-- Arquitetura em camadas
-- Git Flow (Fork, Clone e Pull Request)
-- HTML
-- CSS
-- JavaScript
-- Backend
-- APIs REST
-- Integração com banco de dados
-
----
-
-# Requisitos
-
-## 1. Banco de Dados
-
-A partir do arquivo `atendimento.json`, modele um banco de dados capaz de armazenar as informações. Este arquivo pode ser usado para realizar o "seeder" do banco.
-
-Fique à vontade para definir:
-
-- quantidade de tabelas
-- relacionamentos
-- chaves primárias
-- chaves estrangeiras
-
-Desde que a modelagem faça sentido para o domínio.
-
-Após criar o banco, importe todos os registros do arquivo JSON.
-
----
-
-## 2. Backend
-
-Desenvolva uma API REST utilizando a arquitetura abaixo:
+A API segue a arquitetura em camadas, com cada camada responsável por uma coisa:
 
 ```
-Controller
-    ↓
-Service
-    ↓
-Repository
+Controller  →  Service  →  Repository  →  Banco de dados
+(HTTP)         (regras)     (acesso a dados via Eloquent)
 ```
 
-### Repository
+- **Controller:** recebe a requisição, delega ao Service e devolve a resposta HTTP.
+- **Service:** regras de negócio (resolve paciente/médico, define o status inicial).
+- **Repository:** único ponto que acessa o banco. Cada repositório tem uma
+  interface (contrato), com binding no `AppServiceProvider` (inversão de dependência).
 
-Responsável por:
+### Modelagem do banco (normalizada)
 
-- acesso ao banco
-- consultas
-- inserções
-- atualizações
-- remoções
+```
+pacientes (id, nome)
+medicos   (id, nome)
+atendimentos (id, paciente_id →FK, medico_id →FK, data_atendimento,
+              valor_consulta, status, deleted_at)
+```
 
-### Service
+Os dados do `atendimento.json` são importados via seeder, deduplicando pacientes
+e médicos repetidos (`firstOrCreate`).
 
-Responsável por:
+## Pré-requisitos
 
-- regras de negócio
-- validações
-- formatação
-- transporte de dados
-- tratamento de exceções
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/) (incluído no Docker Desktop)
 
-### Controller
+## Como executar
 
-Responsável por:
+```bash
+# 1. Clonar o repositório
+git clone <url-do-repositorio>
+cd projeto-laravel
 
-- receber requisições
-- retornar respostas HTTP
-- consumir os Services
+# 2. Criar o arquivo de ambiente
+cp .env.example .env
 
----
+# 3. Subir os containers (nginx + php-fpm + mysql)
+docker compose up -d --build
 
-## 3. Frontend
+# 4. Instalar as dependências do PHP
+docker compose exec app composer install
 
-Desenvolva duas telas.
+# 5. Gerar a chave da aplicação
+docker compose exec app php artisan key:generate
 
-### Cadastro de Atendimento
+# 6. Criar as tabelas e importar os dados do atendimento.json
+docker compose exec app php artisan migrate --seed
+```
 
-Permitir cadastrar um novo atendimento.
+Pronto! Acesse a aplicação em **http://localhost:8080**
 
-Campos:
+> Para recriar o banco do zero (limpando tudo e reimportando o JSON):
+> `docker compose exec app php artisan migrate:fresh --seed`
 
-- Nome do paciente
-- Nome do médico
-- Data do atendimento
-- Valor da consulta
+## Telas
 
----
+- **Listagem** — `http://localhost:8080/atendimentos`
+- **Cadastro** — `http://localhost:8080/atendimentos/criar`
 
-### Listagem de Atendimentos
+## API REST
 
-Exibir os atendimentos cadastrados.
+| Método | Rota                  | Descrição                        |
+|--------|-----------------------|----------------------------------|
+| GET    | `/api/atendimentos`   | Lista todos os atendimentos      |
+| POST   | `/api/atendimentos`   | Cadastra um novo atendimento     |
 
-A listagem deverá apresentar, no mínimo:
+### Exemplo — cadastrar atendimento
 
-- Nome do paciente
-- Nome do médico
-- Data
-- Valor da consulta
+```http
+POST /api/atendimentos
+Content-Type: application/json
 
----
+{
+    "nome_paciente": "João da Silva",
+    "nome_medico": "Dra. Ana Martins",
+    "data_atendimento": "2026-06-01",
+    "valor_consulta": 180.00
+}
+```
 
-# Docker
+Resposta `201 Created`:
 
-Toda a aplicação deve ser executável utilizando Docker.
+```json
+{
+    "data": {
+        "id": 21,
+        "nome_paciente": "João da Silva",
+        "nome_medico": "Dra. Ana Martins",
+        "data_atendimento": "2026-06-01",
+        "valor_consulta": "180.00",
+        "status": "agendado"
+    }
+}
+```
 
-Fique à vontade para utilizar Docker Compose.
+Em caso de dados inválidos, a API retorna `422` com as mensagens de erro em português.
 
----
+## Decisões técnicas
 
-# Git
+- **Modelagem normalizada** (3 tabelas com chaves estrangeiras) para representar
+  corretamente o relacionamento entre atendimentos, pacientes e médicos.
+- **O cadastro cria paciente/médico caso não existam** — como não há tela
+  dedicada para cadastrá-los, o formulário de atendimento aceita nomes e o
+  sistema reaproveita o registro existente ou cria um novo.
+- **`valor_consulta` como `decimal(10,2)`** para evitar imprecisão de ponto
+  flutuante em valores monetários.
+- **`status` via enum** (`agendado`, `realizado`, `cancelado`) com cast no model.
+- **Soft delete** nos atendimentos (exclusão lógica via `deleted_at`).
+- A API entrega os dados "crus"; a formatação de data e moeda é feita no frontend.
 
-O desafio deverá ser desenvolvido utilizando Git.
+## Estrutura do projeto
 
-Fluxo esperado:
+```
+app/
+├── Enums/StatusAtendimento.php
+├── Http/
+│   ├── Controllers/Api/AtendimentoController.php
+│   ├── Requests/StoreAtendimentoRequest.php   # validação
+│   └── Resources/AtendimentoResource.php      # formatação do JSON
+├── Models/                                    # Atendimento, Paciente, Medico
+├── Repositories/
+│   ├── Contracts/                             # interfaces
+│   └── *Repository.php                        # implementações
+└── Services/AtendimentoService.php
 
-- Fork do repositório
-- Clone
-- Commits durante o desenvolvimento
-- Pull Request para entrega
+database/
+├── migrations/
+└── seeders/AtendimentoSeeder.php              # importa o atendimento.json
+```
 
-Será observado:
+## Melhorias futuras
 
-- organização dos commits
-- clareza das mensagens
-- utilização correta do Git
-
----
-
-# Diferenciais
-
-Não são obrigatórios, mas contarão pontos positivos.
-
-- Paginação
-- Busca por paciente
-- Busca por médico
-- Ordenação da listagem
+- Autenticação e auditoria (`created_by` — quem registrou o atendimento)
+- Endpoints de edição e remoção
 - Testes automatizados
-- Validação de formulários
-- Tratamento de erros
-- Logs
-- Seed para popular banco
-- Migrações
-- README bem documentado
-- Uso de ORM
-- Boas práticas de Clean Code
-- Tratamento de exceções
-- Documentação da API (Swagger/OpenAPI)
-
----
-
-# O que será avaliado
-
-- Organização do projeto
-- Arquitetura utilizada
-- Modelagem do banco
-- Código limpo
-- Organização das pastas
-- POO
-- Separação de responsabilidades
-- Boas práticas
-- Legibilidade do código
-- Qualidade do Frontend
-- Qualidade da API
-- Uso correto do Git
-- Funcionamento geral da aplicação
-
----
-
-# Tecnologias
-
-Utilizar o PHP e o framework de sua preferência.
-
-Exemplos:
-
-- Laravel
-- HyperF
-- Slim
-- Symfony
-- CakePHP
-
-Frontend:
-
-- HTML
-- CSS
-- JavaScript
-- React
-- Angular
-- Vue
-
-Banco:
-
-- PostgreSQL
-- MySQL
-- SQL Server
-- Oracle
-- SQLite
-
----
-
-# Entrega
-
-O repositório deverá conter:
-
-- Código-fonte
-- Dockerfile
-- docker-compose.yml (caso utilize)
-- README com instruções de execução
-
-O projeto deve subir apenas executando os comandos descritos no README.
-
----
-
-Boa sorte!
