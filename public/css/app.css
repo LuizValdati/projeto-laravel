@@ -1,0 +1,221 @@
+/* ==========================================================================
+   Estilos da aplicação de atendimentos.
+   Paleta verde inspirada em identidade visual de saúde (tons próprios,
+   sem marca de terceiros).
+   ========================================================================== */
+
+:root {
+    --verde:        #009758;
+    --verde-escuro: #007544;
+    --verde-claro:  #e6f4ec;
+    --texto:        #1f2d3d;
+    --texto-suave:  #5b6b7b;
+    --borda:        #dfe6e9;
+    --fundo:        #f4f7f6;
+    --branco:       #ffffff;
+    --erro:         #c0392b;
+    --erro-fundo:   #fdecea;
+    --sucesso:      #1e7e46;
+    --sucesso-fundo:#e6f4ec;
+    --raio:         8px;
+    --sombra:       0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--texto);
+    background-color: var(--fundo);
+    line-height: 1.5;
+}
+
+/* ---------- Barra superior / navegação ---------- */
+.topbar {
+    background-color: var(--verde);
+    color: var(--branco);
+    box-shadow: var(--sombra);
+}
+
+.topbar__inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 20px;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.brand {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.menu {
+    display: flex;
+    gap: 8px;
+}
+
+.menu a {
+    color: var(--branco);
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: var(--raio);
+    font-weight: 500;
+    transition: background-color 0.15s ease;
+}
+
+.menu a:hover {
+    background-color: var(--verde-escuro);
+}
+
+/* ---------- Container de conteúdo ---------- */
+.container {
+    max-width: 960px;
+    margin: 24px auto;
+    padding: 24px;
+    background-color: var(--branco);
+    border-radius: var(--raio);
+    box-shadow: var(--sombra);
+}
+
+h1 {
+    margin-top: 0;
+    color: var(--verde-escuro);
+    font-size: 1.6rem;
+    border-bottom: 2px solid var(--verde-claro);
+    padding-bottom: 12px;
+}
+
+/* ---------- Tabela ---------- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+}
+
+thead {
+    background-color: var(--verde);
+    color: var(--branco);
+}
+
+th,
+td {
+    padding: 12px 14px;
+    text-align: left;
+}
+
+th {
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+tbody tr {
+    border-bottom: 1px solid var(--borda);
+}
+
+tbody tr:nth-child(even) {
+    background-color: var(--verde-claro);
+}
+
+tbody tr:hover {
+    background-color: #d3ecdd;
+}
+
+/* ---------- Formulário ---------- */
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 480px;
+}
+
+label {
+    margin-top: 16px;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--texto-suave);
+}
+
+input {
+    padding: 10px 12px;
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--verde);
+    box-shadow: 0 0 0 3px rgba(0, 151, 88, 0.15);
+}
+
+button[type="submit"] {
+    margin-top: 24px;
+    align-self: flex-start;
+    background-color: var(--verde);
+    color: var(--branco);
+    border: none;
+    padding: 12px 24px;
+    border-radius: var(--raio);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: var(--verde-escuro);
+}
+
+/* ---------- Mensagens de feedback ---------- */
+#mensagens:not(:empty) {
+    margin-bottom: 16px;
+    padding: 12px 16px;
+    border-radius: var(--raio);
+    background-color: var(--verde-claro);
+}
+
+#mensagens p {
+    margin: 0 0 4px;
+    font-weight: 600;
+}
+
+#mensagens ul {
+    margin: 4px 0 0;
+    padding-left: 20px;
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 640px) {
+    .container {
+        margin: 16px;
+        padding: 16px;
+    }
+
+    .topbar__inner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px 16px;
+    }
+
+    table {
+        font-size: 0.9rem;
+    }
+
+    th,
+    td {
+        padding: 8px 10px;
+    }
+}
