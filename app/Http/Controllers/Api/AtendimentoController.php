@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\JsonResponse;
+
+use App\Http\Requests\StoreAtendimentoRequest;
+use App\Services\AtendimentoService;
+use App\Http\Resources\AtendimentoResource;
+
+class AtendimentoController extends Controller
+{
+    public function __construct(
+        protected AtendimentoService $atendimentoService
+    ){}
+
+    public function index(): AnonymousResourceCollection
+    {
+        $atendimentos = $this->atendimentoService->all();
+        return AtendimentoResource::collection($atendimentos);
+    }
+
+    public function store(StoreAtendimentoRequest $request): JsonResponse
+    {
+        $atendimento= $this->atendimentoService->create($request->validated());
+        return (new AtendimentoResource($atendimento))
+            ->response()
+            ->setStatusCode(201);
+    }
+}

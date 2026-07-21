@@ -1,0 +1,43 @@
+# Orquestra os 3 containers da aplicação e a rede entre eles.
+services:
+  # Container da aplicação PHP (php-fpm). É onde o Laravel roda.
+  app:
+    build: .                      # usa o Dockerfile deste diretório
+    container_name: atendimentos_app
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www               # espelha o código do host dentro do container
+    depends_on:
+      - db
+
+  # Servidor web (nginx). Recebe o HTTP e repassa o PHP para o "app".
+  web:
+    image: nginx:alpine
+    container_name: atendimentos_web
+    ports:
+      - "8080:80"                 # acessível em http://localhost:8080
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+
+  # Banco de dados MySQL.
+  db:
+    image: mysql:8.0
+    container_name: atendimentos_db
+    # Valores vêm do .env da raiz (o Compose o carrega automaticamente).
+    # Assim as credenciais ficam num lugar só, iguais às que o Laravel usa.
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"               # permite conectar do host (ex. DBeaver) se quiser
+    volumes:
+      - dbdata:/var/lib/mysql     # persiste os dados mesmo se o container for recriado
+
+# Volume nomeado para o MySQL não perder os dados ao reiniciar.
+volumes:
+  dbdata:
