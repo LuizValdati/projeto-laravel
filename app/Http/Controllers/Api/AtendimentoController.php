@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StoreAtendimentoRequest;
 use App\Services\AtendimentoService;
 use App\Http\Resources\AtendimentoResource;
+use Illuminate\Http\Request;
 
 class AtendimentoController extends Controller
 {
@@ -16,9 +17,9 @@ class AtendimentoController extends Controller
         protected AtendimentoService $atendimentoService
     ){}
 
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
-        $atendimentos = $this->atendimentoService->all();
+        $atendimentos = $this->atendimentoService->all($request->only(['nome_paciente', 'nome_medico']));
         return AtendimentoResource::collection($atendimentos);
     }
 

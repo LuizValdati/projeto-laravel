@@ -179,6 +179,51 @@ button[type="submit"]:hover {
     background-color: var(--verde-escuro);
 }
 
+/* ---------- Barra de busca ---------- */
+.busca {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.busca input {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* ---------- Botões reutilizáveis ---------- */
+.btn {
+    background-color: var(--verde);
+    color: var(--branco);
+    border: 1px solid var(--verde);
+    padding: 10px 20px;
+    border-radius: var(--raio);
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn:hover {
+    background-color: var(--verde-escuro);
+    border-color: var(--verde-escuro);
+}
+
+/* Variante secundária (ex.: botão "Limpar") */
+.btn-secondary {
+    background-color: var(--branco);
+    color: var(--verde-escuro);
+    border-color: var(--borda);
+}
+
+.btn-secondary:hover {
+    background-color: var(--verde-claro);
+    border-color: var(--verde);
+}
+
 /* ---------- Mensagens de feedback ---------- */
 #mensagens:not(:empty) {
     margin-bottom: 16px;

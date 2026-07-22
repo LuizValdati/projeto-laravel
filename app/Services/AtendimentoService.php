@@ -21,9 +21,9 @@ class AtendimentoService
         
     }
 
-    public function all(): Collection
+    public function all(array $filtros = []): Collection
     {
-        return $this->atendimentoRepository->all();
+        return $this->atendimentoRepository->all($filtros);
     }
 
     public function create(array $data): Atendimento

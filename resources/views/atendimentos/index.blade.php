@@ -3,6 +3,14 @@
 @section('conteudo')
 <h1>Lista de Atendimentos</h1>
 
+<div class="busca">
+    <input type="text" id="busca-nome-paciente" placeholder="Buscar por nome do paciente">
+    <input type="text" id="busca-nome-medico" placeholder="Buscar por nome do médico">
+
+    <button class="btn" onclick="carregarAtendimentos()">Buscar</button>
+    <button class="btn btn-secondary" onclick="limparCamposBusca()">Limpar</button>
+</div>
+
 <table>
     <thead>
         <tr>
@@ -23,11 +31,35 @@
 
 @push('scripts')
 <script>
-    fetch('/api/atendimentos')
-        .then((response) => response.json())
+    document.addEventListener('DOMContentLoaded', function() {
+        carregarAtendimentos();
+    });
+
+    function limparCamposBusca() {
+        document.getElementById('busca-nome-paciente').value = '';
+        document.getElementById('busca-nome-medico').value = '';
+        carregarAtendimentos();
+    }
+
+    function carregarAtendimentos() {
+        const params = new URLSearchParams({
+            nome_paciente: document.getElementById('busca-nome-paciente').value,
+            nome_medico: document.getElementById('busca-nome-medico').value
+        });
+        const url = `/api/atendimentos?${params.toString()}`;
+
+        fetch(url)
+            .then((response) => response.json())
             .then((data) => {
                 const atendimentosList = document.getElementById('atendimentos-list');
                 atendimentosList.innerHTML = '';
+
+                if (data.data.length === 0) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td colspan="5" style="text-align: center;">Nenhum atendimento encontrado.</td>`;
+                    atendimentosList.appendChild(row);
+                    return;
+                }
 
                 for (const atendimento of data.data) {
                     const data_atendimento_formatada = atendimento.data_atendimento.split('-').reverse().join('/');
@@ -44,7 +76,8 @@
                     <td>${atendimento.status}</td>
                 `;
                     atendimentosList.appendChild(row);
-                };
+                }
             })
+    }
 </script>
 @endpush
