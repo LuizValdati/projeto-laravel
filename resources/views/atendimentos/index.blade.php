@@ -16,8 +16,8 @@
         <tr>
             <th>Paciente</th>
             <th>Médico</th>
-            <th>Data</th>
-            <th>Valor</th>
+            <th class="ordenavel" onclick="ordenarPor('data_atendimento')">Data <span class="seta" id="seta-data_atendimento"></span></th>
+            <th class="ordenavel" onclick="ordenarPor('valor_consulta')">Valor <span class="seta" id="seta-valor_consulta"></span></th>
             <th>Status</th>
         </tr>
     </thead>
@@ -35,6 +35,29 @@
         carregarAtendimentos();
     });
 
+    var colunaAtualOrdenacao = 'data_atendimento';
+    var direcaoAtualOrdenacao = 'desc';
+
+    function ordenarPor(coluna) {
+        if (colunaAtualOrdenacao === coluna) {
+            direcaoAtualOrdenacao = direcaoAtualOrdenacao === 'asc' ? 'desc' : 'asc';
+        } else {
+            colunaAtualOrdenacao = coluna;
+            direcaoAtualOrdenacao = 'asc';
+        }
+        carregarAtendimentos();
+    }
+
+    function atualizarSetas() {
+        document.querySelectorAll('.seta').forEach(function (seta) {
+            seta.textContent = '';
+        });
+        const setaAtiva = document.getElementById('seta-' + colunaAtualOrdenacao);
+        if (setaAtiva) {
+            setaAtiva.textContent = direcaoAtualOrdenacao === 'asc' ? '▲' : '▼';
+        }
+    }
+
     function limparCamposBusca() {
         document.getElementById('busca-nome-paciente').value = '';
         document.getElementById('busca-nome-medico').value = '';
@@ -42,9 +65,13 @@
     }
 
     function carregarAtendimentos() {
+        atualizarSetas();
+
         const params = new URLSearchParams({
             nome_paciente: document.getElementById('busca-nome-paciente').value,
-            nome_medico: document.getElementById('busca-nome-medico').value
+            nome_medico: document.getElementById('busca-nome-medico').value,
+            ordenar_por: colunaAtualOrdenacao,
+            direcao: direcaoAtualOrdenacao
         });
         const url = `/api/atendimentos?${params.toString()}`;
 
