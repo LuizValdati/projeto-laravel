@@ -19,7 +19,7 @@ class AtendimentoController extends Controller
 
     public function index(Request $request): AnonymousResourceCollection
     {
-        $atendimentos = $this->atendimentoService->all($request->only(['nome_paciente', 'nome_medico']));
+        $atendimentos = $this->atendimentoService->all($request->only(['nome_paciente', 'nome_medico', 'ordenar_por', 'direcao']));
         return AtendimentoResource::collection($atendimentos);
     }
 

@@ -119,6 +119,20 @@ th {
     letter-spacing: 0.4px;
 }
 
+/* Cabeçalhos que ordenam a tabela ao clicar */
+th.ordenavel {
+    cursor: pointer;
+    user-select: none;
+}
+
+th.ordenavel:hover {
+    background-color: var(--verde-escuro);
+}
+
+.seta {
+    font-size: 0.85em;
+}
+
 tbody tr {
     border-bottom: 1px solid var(--borda);
 }
