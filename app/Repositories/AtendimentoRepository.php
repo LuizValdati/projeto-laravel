@@ -17,7 +17,7 @@ class AtendimentoRepository implements AtendimentoRepositoryInterface
             ? $filtros['ordenar_por']
             : 'data_atendimento';
 
-        $direcao = strtolower($filtros['direcao'] ?? '') === 'desc' ? 'desc' : 'asc';
+        $direcao = strtolower($filtros['direcao'] ?? '') === 'asc' ? 'asc' : 'desc';
 
         return Atendimento::with(['paciente', 'medico'])
             ->when($filtros['nome_paciente'] ?? null, function ($query, $nomePaciente) {
