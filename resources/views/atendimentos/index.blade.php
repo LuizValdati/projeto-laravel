@@ -3,12 +3,12 @@
 @section('conteudo')
 <h1>Lista de Atendimentos</h1>
 
-<div>
+<div class="busca">
     <input type="text" id="busca-nome-paciente" placeholder="Buscar por nome do paciente">
     <input type="text" id="busca-nome-medico" placeholder="Buscar por nome do médico">
 
-    <button onclick="carregarAtendimentos()">Buscar</button>
-    <button onclick="limparCamposBusca()">Limpar</button>
+    <button class="btn" onclick="carregarAtendimentos()">Buscar</button>
+    <button class="btn btn-secondary" onclick="limparCamposBusca()">Limpar</button>
 </div>
 
 <table>
