@@ -45,7 +45,7 @@ e médicos repetidos (`firstOrCreate`).
 
 ```bash
 # 1. Clonar o repositório
-git clone <url-do-repositorio>
+git clone <https://github.com/LuizValdati/projeto-laravel.git>
 cd projeto-laravel
 
 # 2. Criar o arquivo de ambiente
@@ -114,8 +114,7 @@ Em caso de dados inválidos, a API retorna `422` com as mensagens de erro em por
 
 ## Decisões técnicas
 
-- **Modelagem normalizada** (3 tabelas com chaves estrangeiras) para representar
-  corretamente o relacionamento entre atendimentos, pacientes e médicos.
+- **Modelagem normalizada** (3 tabelas com chaves estrangeiras) para       representar corretamente o relacionamento entre atendimentos, pacientes e médicos.
 - **O cadastro cria paciente/médico caso não existam** — como não há tela
   dedicada para cadastrá-los, o formulário de atendimento aceita nomes e o
   sistema reaproveita o registro existente ou cria um novo.
