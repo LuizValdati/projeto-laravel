@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repositories;
+
 use App\Models\Paciente;
 use App\Repositories\Contracts\PacienteRepositoryInterface;
 

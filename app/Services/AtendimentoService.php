@@ -2,13 +2,14 @@
 
 namespace App\Services;
 
-use Illuminate\Database\Eloquent\Collection;
-
-use App\Repositories\Contracts\AtendimentoRepositoryInterface;
-use App\Repositories\Contracts\PacienteRepositoryInterface;
-use App\Repositories\Contracts\MedicoRepositoryInterface;
-use App\Models\Atendimento;
 use App\Enums\StatusAtendimento;
+use App\Models\Atendimento;
+use App\Repositories\Contracts\AtendimentoRepositoryInterface;
+use App\Repositories\Contracts\MedicoRepositoryInterface;
+use App\Repositories\Contracts\PacienteRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AtendimentoService
 {
@@ -16,10 +17,7 @@ class AtendimentoService
         protected AtendimentoRepositoryInterface $atendimentoRepository,
         protected PacienteRepositoryInterface $pacienteRepository,
         protected MedicoRepositoryInterface $medicoRepository
-    )
-    {
-        
-    }
+    ) {}
 
     public function all(array $filtros = []): Collection
     {
@@ -28,17 +26,23 @@ class AtendimentoService
 
     public function create(array $data): Atendimento
     {
-        $paciente = $this->pacienteRepository->firstOrCreate($data['nome_paciente']);
-        $medico = $this->medicoRepository->firstOrCreate($data['nome_medico']);
+        $atendimento = DB::transaction(function () use ($data) {
+            $paciente = $this->pacienteRepository->firstOrCreate($data['nome_paciente']);
+            $medico = $this->medicoRepository->firstOrCreate($data['nome_medico']);
 
-        $atendimentoData = [
-            'paciente_id' => $paciente->id,
-            'medico_id' => $medico->id,
-            'data_atendimento' => $data['data_atendimento'],
-            'valor_consulta' => $data['valor_consulta'],
-            'status' => StatusAtendimento::Agendado,
-        ];
+            $atendimentoData = [
+                'paciente_id' => $paciente->id,
+                'medico_id' => $medico->id,
+                'data_atendimento' => $data['data_atendimento'],
+                'valor_consulta' => $data['valor_consulta'],
+                'status' => StatusAtendimento::Agendado,
+            ];
 
-        return $this->atendimentoRepository->create($atendimentoData);
+            return $this->atendimentoRepository->create($atendimentoData);
+        });
+
+        Log::info('Atendimento criado com sucesso.', ['atendimento' => $atendimento->id]);
+
+        return $atendimento;
     }
 }

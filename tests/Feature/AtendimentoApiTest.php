@@ -2,17 +2,14 @@
 
 namespace Tests\Feature;
 
+use App\Models\Atendimento;
+use App\Models\Medico;
+use App\Models\Paciente;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-use App\Models\Atendimento;
-use App\Models\Paciente;
-use App\Models\Medico;
-
-
 class AtendimentoApiTest extends TestCase
 {
-
     use RefreshDatabase;
 
     public function test_lista_atendimentos_com_sucesso(): void
@@ -32,16 +29,16 @@ class AtendimentoApiTest extends TestCase
                         'nome_medico',
                         'data_atendimento',
                         'valor_consulta',
-                        'status'
-                    ]
-                ]
+                        'status',
+                    ],
+                ],
             ]);
     }
 
     public function test_busca_atendimentos_por_paciente(): void
     {
         $paciente = Paciente::factory()->create(['nome' => 'João']);
-    
+
         Atendimento::factory()->create(['paciente_id' => $paciente->id]);
         Atendimento::factory()->count(5)->create();
 
@@ -56,12 +53,12 @@ class AtendimentoApiTest extends TestCase
     {
         $valores = [100, 200, 500, 7, 562];
 
-    Atendimento::factory()
-        ->count(5)
-        ->sequence(
+        Atendimento::factory()
+            ->count(5)
+            ->sequence(
                 fn ($sequence) => ['valor_consulta' => $valores[$sequence->index]]
-            )        
-        ->create();
+            )
+            ->create();
 
         $response = $this->getJson('/api/atendimentos?ordenar_por=valor_consulta&direcao=asc');
 
@@ -69,14 +66,14 @@ class AtendimentoApiTest extends TestCase
             ->assertStatus(200)
             ->assertJsonPath('data.0.valor_consulta', '7.00');
     }
-    
+
     public function test_cadastra_atendimento_com_sucesso(): void
     {
 
-    $atendimento = ['nome_paciente' => Paciente::factory()->create()->nome,
-                    'nome_medico' => Medico::factory()->create()->nome,
-                    'data_atendimento' => fake()->date(),
-                    'valor_consulta' => 789];
+        $atendimento = ['nome_paciente' => Paciente::factory()->create()->nome,
+            'nome_medico' => Medico::factory()->create()->nome,
+            'data_atendimento' => fake()->date(),
+            'valor_consulta' => 789];
 
         $response = $this->postJson('/api/atendimentos', $atendimento);
 
@@ -97,7 +94,7 @@ class AtendimentoApiTest extends TestCase
                 'nome_paciente',
                 'nome_medico',
                 'data_atendimento',
-                'valor_consulta'
+                'valor_consulta',
             ]);
     }
 }

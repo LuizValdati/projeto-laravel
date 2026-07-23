@@ -18,7 +18,7 @@ class MedicoFactory extends Factory
     public function definition(): array
     {
         return [
-            'nome' => fake()->name()
+            'nome' => fake()->name(),
         ];
     }
 }
