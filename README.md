@@ -49,7 +49,10 @@ git clone https://github.com/LuizValdati/projeto-laravel.git
 cd projeto-laravel
 
 # 2. Criar o arquivo de ambiente
+#    Linux, macOS, WSL ou Git Bash:
 cp .env.example .env
+#    Windows (Prompt de Comando / PowerShell):
+copy .env.example .env
 
 # 3. Subir os containers (nginx + php-fpm + mysql)
 docker compose up -d --build
@@ -78,8 +81,21 @@ Pronto! Acesse a aplicação em **http://localhost:8080**
 
 | Método | Rota                  | Descrição                        |
 |--------|-----------------------|----------------------------------|
-| GET    | `/api/atendimentos`   | Lista todos os atendimentos      |
+| GET    | `/api/atendimentos`   | Lista os atendimentos            |
 | POST   | `/api/atendimentos`   | Cadastra um novo atendimento     |
+
+### Busca e ordenação (parâmetros da listagem)
+
+A rota `GET /api/atendimentos` aceita filtros e ordenação via query string:
+
+| Parâmetro       | Descrição                                            |
+|-----------------|------------------------------------------------------|
+| `nome_paciente` | Filtra por nome do paciente (busca parcial)          |
+| `nome_medico`   | Filtra por nome do médico (busca parcial)            |
+| `ordenar_por`   | Coluna de ordenação: `data_atendimento` ou `valor_consulta` |
+| `direcao`       | Direção: `asc` ou `desc` (padrão: `desc`)            |
+
+Exemplo: `GET /api/atendimentos?nome_paciente=maria&ordenar_por=valor_consulta&direcao=asc`
 
 ### Exemplo — cadastrar atendimento
 
@@ -144,8 +160,31 @@ database/
 └── seeders/AtendimentoSeeder.php              # importa o atendimento.json
 ```
 
+## Diferenciais implementados
+
+- **Busca** por paciente e por médico
+- **Ordenação** da listagem (por data e por valor)
+- **Testes automatizados** (feature + unitário com mock)
+- **Validação** de formulário com mensagens em português
+- **Tratamento de erros** (respostas JSON consistentes: 201, 422)
+- **Transação** de banco no cadastro
+- **Logs** de auditoria no cadastro de atendimento
+- **Migrations**, **Seeder** (importa o `atendimento.json`) e uso de **ORM** (Eloquent)
+- **Soft delete** e **enum** tipado para o status
+- **Docker** com um único comando
+
+## Testes
+
+A suíte cobre listagem, busca, ordenação, cadastro e validação, usando
+SQLite em memória (não toca no banco de desenvolvimento).
+
+```bash
+docker compose exec app php artisan test
+```
+
 ## Melhorias futuras
 
 - Autenticação e auditoria (`created_by` — quem registrou o atendimento)
 - Endpoints de edição e remoção
-- Testes automatizados
+- Paginação da listagem
+- Documentação da API com Swagger/OpenAPI
