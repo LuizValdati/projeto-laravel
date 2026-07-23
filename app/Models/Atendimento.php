@@ -3,15 +3,16 @@
 namespace App\Models;
 
 use App\Enums\StatusAtendimento;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Atendimento extends Model
 {
-    use SoftDeletes; // habilita a exclusão lógica (usa a coluna deleted_at)
+    // habilita a exclusão lógica (usa a coluna deleted_at)
     use HasFactory;
+    use SoftDeletes;
 
     /**
      * Campos que podem ser preenchidos em massa (create/update com array).

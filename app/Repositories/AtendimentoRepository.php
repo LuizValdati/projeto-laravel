@@ -2,10 +2,9 @@
 
 namespace App\Repositories;
 
+use App\Models\Atendimento;
 use App\Repositories\Contracts\AtendimentoRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
-
-use App\Models\Atendimento;
 
 class AtendimentoRepository implements AtendimentoRepositoryInterface
 {

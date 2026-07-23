@@ -2,15 +2,14 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
-use Mockery;
-
+use App\Models\Atendimento;
 use App\Repositories\Contracts\AtendimentoRepositoryInterface;
 use App\Repositories\Contracts\MedicoRepositoryInterface;
 use App\Repositories\Contracts\PacienteRepositoryInterface;
 use App\Services\AtendimentoService;
-use App\Models\Atendimento;
 use Illuminate\Database\Eloquent\Collection;
+use Mockery;
+use Tests\TestCase;
 
 class AtendimentoServiceTest extends TestCase
 {

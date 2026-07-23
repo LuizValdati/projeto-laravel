@@ -2,12 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Models\Atendimento;
-use Illuminate\Database\Eloquent\Factories\Factory;
-
-use App\Models\Paciente;
-use App\Models\Medico;
 use App\Enums\StatusAtendimento;
+use App\Models\Atendimento;
+use App\Models\Medico;
+use App\Models\Paciente;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends Factory<Atendimento>
@@ -23,6 +22,7 @@ class AtendimentoFactory extends Factory
     {
         $paciente = Paciente::factory();
         $medico = Medico::factory();
+
         return [
             'paciente_id' => $paciente,
             'medico_id' => $medico,
@@ -31,8 +31,8 @@ class AtendimentoFactory extends Factory
             'status' => fake()->randomElement([
                 StatusAtendimento::Agendado,
                 StatusAtendimento::Realizado,
-                StatusAtendimento::Cancelado
-            ])
+                StatusAtendimento::Cancelado,
+            ]),
         ];
     }
 }

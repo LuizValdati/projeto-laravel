@@ -29,7 +29,7 @@ class StoreAtendimentoRequest extends FormRequest
             'valor_consulta' => ['required', 'numeric', 'min:0'],
         ];
     }
-    
+
     public function messages(): array
     {
         return [

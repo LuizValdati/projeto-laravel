@@ -4,7 +4,6 @@ namespace App\Enums;
 
 /**
  * Status possíveis de um atendimento.
- *
  */
 enum StatusAtendimento: string
 {

@@ -2,13 +2,12 @@
 
 namespace App\Services;
 
-use Illuminate\Database\Eloquent\Collection;
-
-use App\Repositories\Contracts\AtendimentoRepositoryInterface;
-use App\Repositories\Contracts\PacienteRepositoryInterface;
-use App\Repositories\Contracts\MedicoRepositoryInterface;
-use App\Models\Atendimento;
 use App\Enums\StatusAtendimento;
+use App\Models\Atendimento;
+use App\Repositories\Contracts\AtendimentoRepositoryInterface;
+use App\Repositories\Contracts\MedicoRepositoryInterface;
+use App\Repositories\Contracts\PacienteRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 

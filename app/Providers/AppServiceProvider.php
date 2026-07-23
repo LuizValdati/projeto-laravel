@@ -2,13 +2,13 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use App\Repositories\Contracts\AtendimentoRepositoryInterface;
-use App\Repositories\Contracts\PacienteRepositoryInterface;
-use App\Repositories\Contracts\MedicoRepositoryInterface;
 use App\Repositories\AtendimentoRepository;
-use App\Repositories\PacienteRepository;
+use App\Repositories\Contracts\AtendimentoRepositoryInterface;
+use App\Repositories\Contracts\MedicoRepositoryInterface;
+use App\Repositories\Contracts\PacienteRepositoryInterface;
 use App\Repositories\MedicoRepository;
+use App\Repositories\PacienteRepository;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
